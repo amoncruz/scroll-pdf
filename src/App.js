@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useRef, useState } from 'react';
+import banner from './GT_Banners.pdf'
 
-function App() {
+function MyApp() {
+  const [currentScroll, setCurrentScroll] = useState(0);
+  const [scroll, setScroll] = useState({type:""});
+  const spaceScroll = 200;
+  const ref = useRef();
+
+  useEffect(()=>{
+    document.addEventListener("keydown", onKeyPress);
+  },[])
+
+  useEffect(() => {
+
+    switch(scroll.type){
+      case "bottom":
+        ref.current.scrollTo(currentScroll,currentScroll + spaceScroll);
+        return currentScroll + spaceScroll < 500 && setCurrentScroll(currentScroll + spaceScroll);    
+
+      case "top":
+        ref.current.scrollTo(currentScroll,currentScroll - spaceScroll);
+        return currentScroll - spaceScroll >= 0 && setCurrentScroll(currentScroll - spaceScroll);    }
+
+  },[scroll])
+
+  const onKeyPress =  (e) => {
+    if(e.keyCode === 40){
+        setScroll({type:"bottom"});
+    }
+
+    if(e.keyCode === 38){
+      setScroll({type:"top"});
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div class="container-iframe" ref={ref}> 
+      <iframe class="responsive-iframe" src={banner}></iframe>
     </div>
   );
 }
 
-export default App;
+export default MyApp;
